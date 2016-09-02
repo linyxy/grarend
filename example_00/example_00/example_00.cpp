@@ -29,6 +29,9 @@ static struct timeval lastTime;
 
 #define PI 3.14159265
 
+const int BLOCK_NUM = 150;
+const int TOTAL_LINE= 150;
+
 using namespace std;
 
 //****************************************************
@@ -44,6 +47,95 @@ class Viewport {
 // Global Variables
 //****************************************************
 Viewport    viewport;
+
+//*******************************
+//use to draw the triangle
+//*******************************
+int ruleCheck(int a, int b, int c) {
+  int res;
+  a = 2*2*a;
+  b = 2*b;
+  res = a+b+c;
+  switch(res) {
+  case 0:
+    return 0;
+  case 1:
+    return 1;
+  case 2:
+    return 0;
+  case 3:
+    return 1;
+  case 4:
+    return 1;
+  case 5:
+    return 0;
+  case 6:
+    return 1;
+  case 7:
+    return 0;
+  }
+  return 0;
+}
+
+void resize(int li, int c,float* position){
+  float line = (float)li;
+  float cc = (float)c;
+  
+  float LINE_W = 2/(float)BLOCK_NUM;
+  float LINE_H = 2/(float)TOTAL_LINE;
+  cc = LINE_W*c -1;
+
+  line = LINE_H*line -1;
+
+  float left = cc;
+  float right = cc+LINE_W;
+
+  float up = line;
+  float down = line+LINE_H;
+
+  position[0] = left*-1;
+  position[1] = up*-1;
+  position[2] = right*-1;
+  position[3] = up*-1;
+  position[4] = right*-1;
+  position[5] = down*-1;
+  position[6] = left*-1;
+  position[7] = down*-1;
+  // printf("BLOCK_NUM = %f, LINE_W = %f\n",2/BLOCK_NUM,LINE_W );
+
+}
+
+void update(int* l,int* tmp) {
+  //rule #1
+  
+  if (l[0] == 1 || l[1] ==1 )
+    tmp[0] = 1;
+  if (l[BLOCK_NUM-1] ==1 || l[BLOCK_NUM-2] ==1 )
+    tmp[BLOCK_NUM-1] = 1;
+
+  //rule #2
+  // tmp[0] = 0;
+  // tmp[l.length-1] = 0;
+
+  for (int i =1; i<BLOCK_NUM-1; i++) {
+    tmp[i] = ruleCheck(l[i-1], l[i], l[i+1]);
+  }
+
+  // int counter = 0;
+
+  for (int i =0; i<BLOCK_NUM; i++) {
+    l[i] = tmp[i];
+  }
+}
+
+void colorpicker(float* base,int line,int hor){
+  float r = (float)line / (float)TOTAL_LINE ;
+  float g = (float)hor / (float)BLOCK_NUM;
+  float b = 1 - r - g;
+  base[0] = r;
+  base[1] = g;
+  base[2] = b;
+}
 
 //****************************************************
 // reshape viewport if the window is resized
@@ -73,7 +165,7 @@ void myReshape(int w, int h) {
 // sets the window up
 //****************************************************
 void initScene(){
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Clear to black, fully transparent
+  glClearColor(1.0f, 1.0f, 1.0f, 0.0f); // Clear to black, fully transparent
 
   myReshape(viewport.w,viewport.h);
 }
@@ -87,10 +179,10 @@ void myDisplay() {
 
   //----------------------- ----------------------- -----------------------
   // This is a quick hack to add a little bit of animation.
-  static float tip = 0.5f;
-  const  float stp = 0.0001f;
-  const  float beg = 0.1f;
-  const  float end = 0.9f;
+  static int tip = 1;
+  const  int stp = 1;
+  const  int beg = 0;
+  const  int end = TOTAL_LINE;
 
   tip += stp;
   if (tip>end) tip = beg;
@@ -103,28 +195,42 @@ void myDisplay() {
   glLoadIdentity();                            // make sure transformation is "zero'd"
 
   //----------------------- code to draw objects --------------------------
-  // Rectangle Code
-  //glColor3f(red component, green component, blue component);
-  glColor3f(1.0f,0.0f,0.0f);                   // setting the color to pure red 90% for the rect
 
-  glBegin(GL_POLYGON);                         // draw rectangle 
-  //glVertex3f(x val, y val, z val (won't change the point because of the projection type));
-  glVertex3f(-0.8f, 0.0f, 0.0f);               // bottom left corner of rectangle
-  glVertex3f(-0.8f, 0.5f, 0.0f);               // top left corner of rectangle
-  glVertex3f( 0.0f, 0.5f, 0.0f);               // top right corner of rectangle
-  glVertex3f( 0.0f, 0.0f, 0.0f);               // bottom right corner of rectangle
-  glEnd();
-  // Triangle Code
-  glColor3f(1.0f,0.5f,0.0f);                   // setting the color to orange for the triangle
 
-  float basey = -sqrt(0.48f);                  // height of triangle = sqrt(.8^2-.4^2)
-  glBegin(GL_POLYGON);
-  glVertex3f(tip,  0.0f, 0.0f);                // top tip of triangle
-  glVertex3f(0.1f, basey, 0.0f);               // lower left corner of triangle
-  glVertex3f(0.9f, basey, 0.0f);               // lower right corner of triangle
-  glEnd();
+  int line_count = 0;
+
+  int line[BLOCK_NUM],tem[BLOCK_NUM];
+  for(int i = 0; i<BLOCK_NUM;i++){
+    line[i] = 0;
+    tem[i] = 0;
+  }
+  line[BLOCK_NUM/2] = 1;
+  for (line_count = 0; line_count < tip; ++line_count)
+  {
+    // printf("%d\n",line_count);
+    for(int sq = 0; sq<BLOCK_NUM;sq++){
+      if(line[sq]==1){
+        float pos[8];
+        float color[3];
+        resize(line_count,sq,pos);
+        colorpicker(color,line_count,sq);
+        glColor3f(color[0],color[1],color[2]); 
+        glBegin(GL_POLYGON);                         // draw rectangle 
+        //glVertex3f(x val, y val, z val (won't change the point because of the projection type));
+        glVertex3f(pos[0], pos[1], 0.0f);             // bottom right corner of rectangle
+        glVertex3f(pos[2], pos[3], 0.0f);  
+        glVertex3f(pos[4], pos[5], 0.0f);  
+        glVertex3f(pos[6], pos[7], 0.0f);  
+        glEnd();
+        // printf("%f\n",pos[6] );
+      }
+
+    }
+    // printf("\n");
+    update(line,tem);
+  }
+
   //-----------------------------------------------------------------------
-
   glFlush();
   glutSwapBuffers();                           // swap buffers (we earlier set double buffer)
 }
@@ -153,13 +259,13 @@ int main(int argc, char *argv[]) {
   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 
   // Initalize theviewport size
-  viewport.w = 400;
-  viewport.h = 400;
+  viewport.w = 600;
+  viewport.h = 600;
 
   //The size and position of the window
   glutInitWindowSize(viewport.w, viewport.h);
   glutInitWindowPosition(0, 0);
-  glutCreateWindow("CS184!");
+  glutCreateWindow("Triangle!");
 
   initScene();                                 // quick function to set up scene
 
@@ -169,8 +275,7 @@ int main(int argc, char *argv[]) {
   glutMainLoop();                              // infinite loop that will keep drawing and resizing and whatever else
 
   return 0;
-}
-
+} 
 
 
 

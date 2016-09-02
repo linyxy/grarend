@@ -1,0 +1,233 @@
+body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 15px;
+  margin: 10px;
+  padding: 0 0 0 10px;
+}
+
+h1, h2, h3 {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+  color: #0b527a;
+}
+
+a:link,
+a:visited,
+a:active {
+  color: #216d99;
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover {
+  color: #313c42;
+  text-decoration: underline;
+}
+
+#header {
+}
+
+#header h1 {
+  padding: 10px 5px 0 0;
+  margin: 0;
+  display: inline;
+  font-weight: bold;
+  font-size: 30px;
+}
+
+#header h2 {
+color: #0b527a;
+  display: inline;
+  padding: 10px 10px 0 5px;
+  margin: 0;
+  font-size: 20px;
+}
+
+#header .menu {
+  margin: 0;
+  padding: 0;
+}
+
+#header .menu a:link,
+#header .menu a:visited,
+#header .menu a:active {
+  font-weight: normal;
+  color: #000;
+}
+#header .menu a:hover {
+  color: #0b527a;
+}
+
+
+
+#header .menu li {
+  display: inline;
+
+  padding: 0 1px 0 3px;
+  font-size: 15px;
+}
+
+#pagetitle h1 {
+  font-size: 20px;
+  font-weight: bold;
+  padding: 20px 0 0 0;
+}
+
+#body {
+  width: 100%;
+}
+
+#body h1, h2, h3, h4, h5{
+  color: #000;
+  margin: 5px 0 0 30px;
+}
+
+#body h1 {
+  border-bottom: 1px solid #bdc6cb;
+  font-size: 23px;
+  padding: 5px 0 0 0;
+  margin: 0;
+  clear: both;
+}
+
+#body h2 {
+  font-size: 16px;
+  margin: 5px 0 0 25px;
+  padding: 0;
+  font-weight: bold;
+  border-bottom: 1px solid #c9dde9;
+}
+
+#body h3 {
+  font-size: 15px;
+  padding: 0;
+  font-weight: bold;
+  border-bottom: 1px solid #c9dde9;
+}
+
+#body h4 {
+  font-size: 12px;
+  margin: 0 0 10px 30px;
+  font-weight: bold;
+}
+
+#body p {
+  padding: 0 0 0 30px;
+  margin: 0 0 15px 0;
+}
+
+#body .peopledetails {
+  float: left;
+  padding: 0 50px 15px 30px;
+}
+
+#body .peopledetails h1 {
+  border: none;
+  padding: 0;
+  font-size: 20px;
+  margin: 0 0 1px 0;
+}
+
+#body .peopledetails p {
+  padding: 0;
+  margin: 0;
+}
+
+#body .peopledetails a {
+  font-weight: inherit;
+  color: #2d393f;
+}
+
+#body ul.nodot,
+#body ul.nodot ul {
+  list-style: none;
+}
+
+#body .padlr15 {
+  padding:0px 15px 0px 15px;
+}
+
+#body .padl25 {
+  padding: 0px 0px 0px 25px;
+}
+
+#body .padl25 iframe {
+  padding-bottom:25px;
+}
+
+#body .padl25 h3 {
+  border: 0;
+  font-weight: normal;
+  font-size: 18px;
+}
+
+#body ol, 
+#body ul {
+  padding: 0 0 0 50px;
+}
+
+#body table.border td,
+#body table.border th,
+#body table.border {
+  border: 1px solid #758791;
+}
+
+#body table.border td,
+#body table.border th,
+#body table.border th {
+  padding: 5px;
+}
+
+#body table {
+  text-align: left;
+  margin: 0 auto 0 auto;
+}
+
+#body table.nothing {
+	border: none;
+}
+
+#body .roster {
+  margin: 0 auto 0 auto;
+  width: 800px;
+  padding: 0;
+  border: 0;
+  padding: 0;
+}
+
+#body .roster tr th {
+  font: bold 11px;
+  color: #4f6b72;
+  border-right: 1px solid #C1DAD7;
+  border-bottom: 1px solid #C1DAD7;
+  border-top: 1px solid #C1DAD7;
+  letter-spacing: 2px;
+  text-align: left;
+  padding: 6px 6px 6px 12px;
+  background: #eff5f8;
+  border: 0;
+}
+
+#body .roster tr td {
+  border-right: 1px solid #C1DAD7;
+  border-bottom: 1px solid #C1DAD7;
+  padding: 6px 6px 6px 12px;
+  color: #4f6b72;
+  border: 0;
+}
+
+#body .roster tr:nth-child(odd) {
+  background: #fff;
+  color: #4f6b72;
+}
+
+
+#body .roster tr:nth-child(even) {
+  background: #F5FAFA;
+  color: #797268;
+}
+
+#body .borderbottom {
+  border-bottom:1px solid #bdc6cb;
+}
+
+

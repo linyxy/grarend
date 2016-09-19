@@ -9,6 +9,7 @@ class Vec3
 	public:
 		Vec3(double x,double y,double z);
 		Vec3(Vec3 v);
+        Vec3();
 		Vec3 copy(Vec3 v);
 		Vec3 normalize(Vec3 v);
 		void normalize();
@@ -27,14 +28,25 @@ class Vec3
         void sub(Vec3 va);
         static Vec3 sub(Vec3 va,Vec3 vb);
         static Vec3 inverse(Vec3 va);
+        void scale(double n);
+        static Vec3 scale(Vec3 va,double n);
+        //重载
+        Vec3 operator+(const Vec3 va);
+        Vec3 operator-(const Vec3 va);
+        Vec3 operator*(const double m);
 
-	
 };
 
 Vec3::Vec3(double x,double y,double z){
 	this->x = x;
 	this->y = y;
 	this->z = z;
+}
+
+Vec3::Vec3() {
+    x = 0;
+    y = 0;
+    z = 0;
 }
 
 
@@ -128,4 +140,31 @@ Vec3 Vec3::add(Vec3 va, Vec3 vb) {
 
 Vec3 Vec3::sub(Vec3 va, Vec3 vb) {
     return add(va,inverse(vb));
+}
+
+void Vec3::scale(double n) {
+    setx(x*n);
+    sety(y*n);
+    setz(z*n);
+}
+
+Vec3 Vec3::scale(Vec3 va, double n) {
+    Vec3 v = new Vec3(va);
+    v.scale(n);
+    return v;
+}
+
+Vec3 Vec3::operator+(const Vec3 va) {
+    Vec3 v = new Vec3(this);
+    return v.add(va);
+}
+
+Vec3 Vec3::operator-(const Vec3 va) {
+    Vec3 v = new Vec3(this);
+    return v.sub(va);
+}
+
+Vec3 Vec3::operator*(const double m) {
+    Vec3 v= new Vec3(this);
+    return v.scale(m);
 }

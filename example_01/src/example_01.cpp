@@ -8,6 +8,9 @@
 #include <stdlib.h>
 #include <time.h>
 #include <math.h>
+//include libs for the project
+
+using namespace std;
 
 #ifdef _WIN32
 static DWORD lastTime;

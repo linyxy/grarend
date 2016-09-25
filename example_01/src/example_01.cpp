@@ -9,7 +9,8 @@
 #include <time.h>
 #include <math.h>
 //include libs for the project
-#include "vec3.cpp"
+#include "Vec3.cpp"
+#include "Color.h"
 
 using namespace std;
 
@@ -31,9 +32,9 @@ bool auto_strech = false;
 int Width_global = 400;
 int Height_global = 400;
 
-GLfloat ambient_color[5][3] = {0};
-GLfloat diffuse_color[5][3] = {0};
-GLfloat specular_color[5][3] = {0};
+Color ambient_color = Color();
+Color diffuse_color[5];
+Color specular_color[5];
 GLfloat power_u[5] = {0};
 GLfloat power_v[5] = {0};
 GLfloat power_i[5] = {0};
@@ -109,6 +110,7 @@ void drawCircle(float centerX, float centerY, float radius, int id) {
     int minI = max(0,(int)floor(centerX-radius));
     int maxI = min(Width_global-1,(int)ceil(centerX+radius));
 
+
     int minJ = max(0,(int)floor(centerY-radius));
     int maxJ = min(Height_global-1,(int)ceil(centerY+radius));
 
@@ -141,7 +143,7 @@ void drawCircle(float centerX, float centerY, float radius, int id) {
                 // }
             }
 
-            Vec3 NORMAL = new Vec3(x, y, z);
+            Vec3 NORMAL =  Vec3();
 
 
             //ambient    
@@ -153,18 +155,18 @@ void drawCircle(float centerX, float centerY, float radius, int id) {
             //directional light
             for (int dl_id = 0; dl_id < dl_num; dl_id++) {
 
-                Vec3 L = new Vec3(directional_light_location[dl_id][0], directional_light_location[dl_id][1], directional_light_location[dl_id][2]);
-                L = inverse(L);
+                Vec3 L =  Vec3(directional_light_location[dl_id][0], directional_light_location[dl_id][1], directional_light_location[dl_id][2]);
+                L.inverse();
                 Vec3 V;//TODO
-                Vec3 R = sub(2* dot(N, dot(N, L)), L);
+                Vec3 R = Vec3::sub(2* Vec3::dot(N, Vec3::dot(N, L)), L);
                 GLfloat n;//TODO
 
                 //diffuse + specular
-                red += dot(L, NORMAL) * diffuse_color[id][0] * directional_light_color[id][0] * 255 + specular_color[id][0] * directional_light_color[id][0] * pow(dot(R, V), n) * 255;
+                red += Vec3::dot(L, NORMAL) * diffuse_color[id][0] * directional_light_color[id][0] * 255 + specular_color[id][0] * directional_light_color[id][0] * pow(Vec3::dot(R, V), n) * 255;
 
-                green += dot(L, NORMAL) * diffuse_color[id][1] * directional_light_color[id][1] * 255 + specular_color[id][1] * directional_light_color[id][1] * pow(dot(R, V), n) * 255;
+                green += Vec3::dot(L, NORMAL) * diffuse_color[id][1] * directional_light_color[id][1] * 255 + specular_color[id][1] * directional_light_color[id][1] * pow(Vec3::dot(R, V), n) * 255;
 
-                blue += dot(L, NORMAL) * diffuse_color[id][2] * directional_light_color[id][2] * 255 + specular_color[id][2] * directional_light_color[id][2] * pow(dot(R, V), n) * 255;
+                blue += Vec3::dot(L, NORMAL) * diffuse_color[id][2] * directional_light_color[id][2] * 255 + specular_color[id][2] * directional_light_color[id][2] * pow(Vec3::dot(R, V), n) * 255;
 
             }
         }
@@ -300,7 +302,7 @@ void getInputCoefficients(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
     //This initializes glfw
     initializeRendering();
-    getInputCoefficients(argc, *argv[]);
+    getInputCoefficients(argc, argv);
     
     GLFWwindow* window = glfwCreateWindow( Width_global, Height_global, "CS184", NULL, NULL );
     if ( !window )

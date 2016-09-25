@@ -11,10 +11,10 @@ class Vec3
 		Vec3(GLfloat x,GLfloat y,GLfloat z);
 		Vec3(Vec3 v);
         Vec3();
-		Vec3 copy(Vec3 v);
+		static Vec3 copy(Vec3 v);
 		Vec3 normalize(Vec3 v);
 		void normalize();
-        GLfloat dot(Vec3 va,Vec3 vb);
+        static GLfloat dot(Vec3 va,Vec3 vb);
         GLfloat getx();
         GLfloat gety();
         GLfloat getz();
@@ -29,13 +29,14 @@ class Vec3
         void sub(Vec3 va);
         static Vec3 sub(Vec3 va,Vec3 vb);
         static Vec3 inverse(Vec3 va);
+        void inverse();
         void scale(GLfloat n);
         static Vec3 scale(Vec3 va,GLfloat n);
         //重载
         Vec3 operator+(const Vec3 va);
         Vec3 operator-(const Vec3 va);
         Vec3 operator*(const GLfloat m);
-
+        Vec3 operator=(const Vec3 va);
 };
 
 Vec3::Vec3(GLfloat x,GLfloat y,GLfloat z){
@@ -123,6 +124,12 @@ Vec3 Vec3::inverse(Vec3 va) {
     return  Vec3(va.getx()*(-1),va.gety()*(-1),va.getz()*(-1));
 }
 
+void Vec3::inverse() {
+    x = x*(-1);
+    y = y*(-1);
+    z = z*(-1);
+}
+
 void Vec3::add(Vec3 va) {
     setx(x+va.getx());
     sety(y+va.gety());
@@ -171,4 +178,11 @@ Vec3 Vec3::operator*(const GLfloat m) {
     Vec3 v=  Vec3(*this);
     v.scale(m);
     return v;
+}
+
+Vec3 Vec3::operator=(const Vec3 va) {
+    x = va.x;
+    y = va.y;
+    z = va.z;
+    return *this;
 }

@@ -111,15 +111,15 @@ void drawCircle(float centerX, float centerY, float radius) {
                 // This is the front-facing Z coordinate
                 float z = sqrt(radius*radius-dist*dist);
 
-                setPixel(i, j, 1.0, 0.0, 0.0);
+//                setPixel(i, j, 1.0, 0.0, 0.0);
 
                 // This is amusing, but it assumes negative color values are treated reasonably.
-                // setPixel(i,j, x/radius, y/radius, z/radius );
+                 setPixel(i,j, x/radius, y/radius, z/radius );
                 
                 // Just for fun, an example of making the boundary pixels yellow.
-                // if (dist > (radius-1.0)) {
-                //     setPixel(i, j, 1.0, 1.0, 0.0);
-                // }
+                 if (dist > (radius-1.0)) {
+                     setPixel(i, j, 1.0, 1.0, 0.0);
+                 }
             }
         }
     }

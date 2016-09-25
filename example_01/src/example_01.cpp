@@ -30,6 +30,20 @@ bool auto_strech = false;
 int Width_global = 400;
 int Height_global = 400;
 
+GLfloat ambient_color[5][3] = {0};
+GLfloat diffuse_color[5][3] = {0};
+GLfloat specular_color[5][3] = {0};
+GLfloat power_u[5] = {0};
+GLfloat power_v[5] = {0};
+GLfloat power_i[5] = {0};
+GLfloat point_light_location[5][3] = {0};
+GLfloat point_light_color[5][3] = {0};
+GLfloat directional_light_location[5][3] = {0};
+GLfloat directional_light_color[5][3] = {0};
+GLfloat sphere[5][4] = {0};
+int ka_num = 0, kd_num = 0, pu_num = 0, pv_num = 0, pi_num = 0, pl_num = 0, dl_num = 0, sphere_num = 0;
+
+
 inline float sqr(float x) { return x*x; }
 
 
@@ -82,7 +96,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 //****************************************************
 // Draw a filled circle.
 //****************************************************
-void drawCircle(float centerX, float centerY, float radius) {
+void drawCircle(float centerX, float centerY, float radius, int id) {
     // Draw inner circle
     glBegin(GL_POINTS);
 
@@ -97,29 +111,60 @@ void drawCircle(float centerX, float centerY, float radius) {
     int minJ = max(0,(int)floor(centerY-radius));
     int maxJ = min(Height_global-1,(int)ceil(centerY+radius));
 
+
     for (int i = 0; i < Width_global; i++) {
         for (int j = 0; j < Height_global; j++) {
 
             // Location of the center of pixel relative to center of sphere
-            float x = (i+0.5-centerX);
-            float y = (j+0.5-centerY);
+            float x = (i + 0.5 - centerX);
+            float y = (j + 0.5 - centerY);
+            GLfloat red = 0, green = 0, blue = 0;
+
 
             float dist = sqrt(sqr(x) + sqr(y));
 
             if (dist <= radius) {
 
                 // This is the front-facing Z coordinate
-                float z = sqrt(radius*radius-dist*dist);
+                float z = sqrt(radius * radius - dist * dist);
+                red = 0, green = 0, blue = 0;
 
-//                setPixel(i, j, 1.0, 0.0, 0.0);
+                setPixel(i, j, red, green, blue);
 
                 // This is amusing, but it assumes negative color values are treated reasonably.
-                 setPixel(i,j, x/radius, y/radius, z/radius );
+                // setPixel(i,j, x/radius, y/radius, z/radius );
                 
                 // Just for fun, an example of making the boundary pixels yellow.
-                 if (dist > (radius-1.0)) {
-                     setPixel(i, j, 1.0, 1.0, 0.0);
-                 }
+                // if (dist > (radius-1.0)) {
+                //     setPixel(i, j, 1.0, 1.0, 0.0);
+                // }
+            }
+
+            Vec3 NORMAL = new Vec3(x, y, z);
+
+
+            //ambient    
+            red += ambient_color[id][0] * 255;
+            green += ambient_color[id][1] * 255;
+            blue += ambient_color[id][2] * 255;
+            
+
+            //directional light
+            for (int dl_id = 0; dl_id < dl_num; dl_id++) {
+
+                Vec3 L = new Vec3(directional_light_location[dl_id][0], directional_light_location[dl_id][1], directional_light_location[dl_id][2]);
+                L = inverse(L);
+                Vec3 V;//TODO
+                Vec3 R = sub(2* dot(N, dot(N, L)), L);
+                GLfloat n;//TODO
+
+                //diffuse + specular
+                red += dot(L, NORMAL) * diffuse_color[id][0] * directional_light_color[id][0] * 255 + specular_color[id][0] * directional_light_color[id][0] * pow(dot(R, V), n) * 255;
+
+                green += dot(L, NORMAL) * diffuse_color[id][1] * directional_light_color[id][1] * 255 + specular_color[id][1] * directional_light_color[id][1] * pow(dot(R, V), n) * 255;
+
+                blue += dot(L, NORMAL) * diffuse_color[id][2] * directional_light_color[id][2] * 255 + specular_color[id][2] * directional_light_color[id][2] * pow(dot(R, V), n) * 255;
+
             }
         }
     }
@@ -168,11 +213,93 @@ void size_callback(GLFWwindow* window, int width, int height)
 
 
 //****************************************************
+// function to get input coefficients
+//****************************************************
+void getInputCoefficients(int argc, char *argv[]) {
+    int i = 0;
+    while (i < argc) {
+        if (!strcmp(argv[i], "-ka")) {
+            for (int j = 0; j < 3; j++) {
+                ambient_color[ka_num][j] = atof(argv[++i]);
+            }
+            i += 1;
+            ka_num += 1;
+
+        }
+
+        else if (!strcmp(argv[i], "-kd")) {
+            for (int j = 0; j < 3; j++) {
+                diffuse_color[kd_num][j] = atof(argv[++i]);
+            }
+            i += 1;
+            kd_num += 1;
+        }
+
+        else if (!strcmp(argv[i], "-ks")) {
+            for (int j = 0; j < 3; j++) {
+                specular_color[ks_num][j] = atof(argv[++i]);
+            }
+            i += 1;
+            ks_num += 1;
+        }
+
+        else if (!strcmp(argv[i], "-spu")) {
+            power_u[pu_num] = atof(argv[++i]);
+            i += 1;
+            pu_num += 1;
+        }
+
+        else if (!strcmp(argv[i], "-spv")) {
+            power_v[pv_num] = atof(argv[++i]);
+            i += 1;
+            pv_num += 1;
+        }
+
+        else if (!strcmp(argv[i], "-sp")) {
+            power_i[pi_num] = atof(argv[++i]);
+            i += 1;
+            pi_num += 1;
+        }
+
+        else if (!strcmp(argv[i], "-pl")) {
+            for (int j = 0; j < 3; j++) {
+                point_light_location[pl_num][j] = atof(argv[++i]);
+            }
+            for (int j = 0; j < 3; j++) {
+                point_light_color[pl_num][j] = atof(argv[++i]);
+            }
+        
+            i += 1;
+            pl_num += 1;
+        }
+
+        else if (!strcmp(argv[i], "-dl")) {
+            for (int j = 0; j < 3; j++) {
+                directional_light_location[dl_num][j] = atof(argv[++i]);
+            }
+            for (int j = 0; j < 3; j++) {
+                directional_light_color[dl_num][j] = atof(argv[++i]);
+            }
+        
+            i += 1;
+            dl_num += 1;
+        }
+
+    }
+
+}
+
+
+
+
+
+//****************************************************
 // the usual stuff, nothing exciting here
 //****************************************************
 int main(int argc, char *argv[]) {
     //This initializes glfw
     initializeRendering();
+    getInputCoefficients(argc, *argv[]);
     
     GLFWwindow* window = glfwCreateWindow( Width_global, Height_global, "CS184", NULL, NULL );
     if ( !window )

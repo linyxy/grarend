@@ -66,10 +66,10 @@ static const char* vertex_shader_text =
 
 static const char* fragment_shader_text =
 "#version 150\n"
-"out vec4 color;\n"
+"out vec4 Color;\n"
 "void main()\n"
 "{\n"
-"    color = vec4(0.2, 1.0, 0.2, 1.0); \n"
+"    Color = vec4(0.2, 1.0, 0.2, 1.0); \n"
 "}\n";
 
 /**********************************************************************

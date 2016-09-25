@@ -1,43 +1,44 @@
 #include <math.h>
+#include <GLFW/glfw3.h>
 
 class Vec3
 {
 
 	private:
-		double x,y,z;
+		GLfloat x,y,z;
 
 	public:
-		Vec3(double x,double y,double z);
+		Vec3(GLfloat x,GLfloat y,GLfloat z);
 		Vec3(Vec3 v);
         Vec3();
 		Vec3 copy(Vec3 v);
 		Vec3 normalize(Vec3 v);
 		void normalize();
-        double dot(Vec3 va,Vec3 vb);
-        double getx();
-        double gety();
-        double getz();
-        void setx(double a);
-        void sety(double a);
-        void setz(double a);
-        void setVec(double a, double b, double c);
+        GLfloat dot(Vec3 va,Vec3 vb);
+        GLfloat getx();
+        GLfloat gety();
+        GLfloat getz();
+        void setx(GLfloat a);
+        void sety(GLfloat a);
+        void setz(GLfloat a);
+        void setVec(GLfloat a, GLfloat b, GLfloat c);
         static Vec3 cross(Vec3 va,Vec3 vb);
-        double length();
+        GLfloat length();
         void add(Vec3 va);
         static Vec3 add(Vec3 va,Vec3 vb);
         void sub(Vec3 va);
         static Vec3 sub(Vec3 va,Vec3 vb);
         static Vec3 inverse(Vec3 va);
-        void scale(double n);
-        static Vec3 scale(Vec3 va,double n);
+        void scale(GLfloat n);
+        static Vec3 scale(Vec3 va,GLfloat n);
         //重载
         Vec3 operator+(const Vec3 va);
         Vec3 operator-(const Vec3 va);
-        Vec3 operator*(const double m);
+        Vec3 operator*(const GLfloat m);
 
 };
 
-Vec3::Vec3(double x,double y,double z){
+Vec3::Vec3(GLfloat x,GLfloat y,GLfloat z){
 	this->x = x;
 	this->y = y;
 	this->z = z;
@@ -57,54 +58,54 @@ Vec3::Vec3(Vec3 v){
 	this->z = v.z;
 }
 
-double Vec3::getx() {
+GLfloat Vec3::getx() {
     return x;
 }
 
-double Vec3::gety() {
+GLfloat Vec3::gety() {
     return y;
 }
 
-double Vec3::getz() {
+GLfloat Vec3::getz() {
     return z;
 }
 
-void Vec3::setx(double a) {
+void Vec3::setx(GLfloat a) {
     x = a;
 }
 
-void Vec3::sety(double a) {
+void Vec3::sety(GLfloat a) {
     y = a;
 }
 
-void Vec3::setz(double a) {
+void Vec3::setz(GLfloat a) {
     z = a;
 }
 
-void Vec3::setVec(double a, double b, double c) {
+void Vec3::setVec(GLfloat a, GLfloat b, GLfloat c) {
     setx(a);
     sety(b);
     setz(c);
 }
 
 Vec3 Vec3::copy(Vec3 v){
-	Vec3 p = new Vec3(v.x,v.y,v.z);
+	Vec3 p = Vec3(v.x,v.y,v.z);
 	return p;
 }
 
 Vec3 Vec3::normalize(Vec3 v){
-	double length = sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-	return new Vec3(v.x/length,v.y/length,v.z/length);
+	GLfloat length = sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
+	return Vec3(v.x/length,v.y/length,v.z/length);
 }
 
 void Vec3::normalize(){
-	double length = sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+	GLfloat length = sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
     this->x /= length;
     this->y /= length;
     this->z /= length;
 }
 
-double Vec3::dot(Vec3 va,Vec3 vb){
+GLfloat Vec3::dot(Vec3 va,Vec3 vb){
     return  va.getx()*vb.getx()+
             va.gety()*vb.gety()+
             va.getz()*vb.getz();
@@ -114,12 +115,12 @@ Vec3 Vec3::cross(Vec3 va, Vec3 vb) {
 
 }
 
-double Vec3::length() {
+GLfloat Vec3::length() {
     return sqrt(x*x+y*y+z*z);
 }
 
 Vec3 Vec3::inverse(Vec3 va) {
-    return  new Vec3(va.getx()*(-1),va.gety()*(-1),va.getz()*(-1));
+    return  Vec3(va.getx()*(-1),va.gety()*(-1),va.getz()*(-1));
 }
 
 void Vec3::add(Vec3 va) {
@@ -133,7 +134,7 @@ void Vec3::sub(Vec3 va) {
 }
 
 Vec3 Vec3::add(Vec3 va, Vec3 vb) {
-    return  new Vec3(va.getx()+vb.getx(),
+    return     Vec3(va.getx()+vb.getx(),
                     va.gety()+vb.gety(),
                     va.getz()+vb.getz());
 }
@@ -142,29 +143,32 @@ Vec3 Vec3::sub(Vec3 va, Vec3 vb) {
     return add(va,inverse(vb));
 }
 
-void Vec3::scale(double n) {
+void Vec3::scale(GLfloat n) {
     setx(x*n);
     sety(y*n);
     setz(z*n);
 }
 
-Vec3 Vec3::scale(Vec3 va, double n) {
-    Vec3 v = new Vec3(va);
+Vec3 Vec3::scale(Vec3 va, GLfloat n) {
+    Vec3 v =  Vec3(va);
     v.scale(n);
     return v;
 }
 
 Vec3 Vec3::operator+(const Vec3 va) {
-    Vec3 v = new Vec3(this);
-    return v.add(va);
+    Vec3 v =  Vec3(*this);
+    v.add(va);
+    return v;
 }
 
 Vec3 Vec3::operator-(const Vec3 va) {
-    Vec3 v = new Vec3(this);
-    return v.sub(va);
+    Vec3 v =  Vec3(*this);
+    v.sub(va);
+    return v;
 }
 
-Vec3 Vec3::operator*(const double m) {
-    Vec3 v= new Vec3(this);
-    return v.scale(m);
+Vec3 Vec3::operator*(const GLfloat m) {
+    Vec3 v=  Vec3(*this);
+    v.scale(m);
+    return v;
 }

@@ -446,7 +446,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
     // handle (in most situations) and it gives a linear memeory access
     // access pattern (which may give better performance in some
     // situations). GL_T2F_C4UB_V3F means: 2 floats for texture coords,
-    // 4 ubytes for color and 3 floats for vertex coord (in that order).
+    // 4 ubytes for Color and 3 floats for vertex coord (in that order).
     // Most OpenGL cards / drivers are optimized for this format.
     glInterleavedArrays(GL_T2F_C4UB_V3F, 0, vertex_array);
 
@@ -483,7 +483,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
             if (alpha > 1.f)
                 alpha = 1.f;
 
-            // Convert color from float to 8-bit (store it in a 32-bit
+            // Convert Color from float to 8-bit (store it in a 32-bit
             // integer using endian independent type casting)
             ((GLubyte*) &rgba)[0] = (GLubyte)(pptr->r * 255.f);
             ((GLubyte*) &rgba)[1] = (GLubyte)(pptr->g * 255.f);
@@ -492,7 +492,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
 
             // 3) Translate the quad to the correct position in modelview
             // space and store its parameters in vertex arrays (we also
-            // store texture coord and color information for each vertex).
+            // store texture coord and Color information for each vertex).
 
             // Lower left corner
             vptr->s    = 0.f;
@@ -558,7 +558,7 @@ static void draw_particles(GLFWwindow* window, double t, float dt)
     glDrawArrays(GL_QUADS, 0, PARTICLE_VERTS * particle_count);
 
     // Disable vertex arrays (Note: glInterleavedArrays implicitly called
-    // glEnableClientState for vertex, texture coord and color arrays)
+    // glEnableClientState for vertex, texture coord and Color arrays)
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);

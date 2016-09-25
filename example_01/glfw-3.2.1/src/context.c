@@ -212,7 +212,7 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
         // These polynomials make many small channel size differences matter
         // less than one large channel size difference
 
-        // Calculate color channel size difference value
+        // Calculate Color channel size difference value
         {
             colorDiff = 0;
 
@@ -235,7 +235,7 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
             }
         }
 
-        // Calculate non-color channel size difference value
+        // Calculate non-Color channel size difference value
         {
             extraDiff = 0;
 
@@ -293,7 +293,7 @@ const _GLFWfbconfig* _glfwChooseFBConfig(const _GLFWfbconfig* desired,
 
         // Figure out if the current one is better than the best one found so far
         // Least number of missing buffers is the most important heuristic,
-        // then color buffer size match and lastly size match for other buffers
+        // then Color buffer size match and lastly size match for other buffers
 
         if (missing < leastMissing)
             closest = current;

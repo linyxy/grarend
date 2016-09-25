@@ -470,7 +470,7 @@ void DrawBoingBallBand( GLfloat long_lo,
       colorToggle = ! colorToggle;
 
      /*
-      * Change color if drawing shadow.
+      * Change Color if drawing shadow.
       */
       if ( drawBallHow == DRAW_BALL_SHADOW )
          glColor3f( 0.35f, 0.35f, 0.35f );
@@ -523,7 +523,7 @@ void DrawBoingBallBand( GLfloat long_lo,
    }
 
   /*
-   * Toggle color so that next band will opposite red/white colors than this one.
+   * Toggle Color so that next band will opposite red/white colors than this one.
    */
    colorToggle = ! colorToggle;
 

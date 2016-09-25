@@ -23,7 +23,7 @@
 //
 //========================================================================
 //
-// This test creates four windows and clears each in a different color
+// This test creates four windows and clears each in a different Color
 //
 //========================================================================
 

@@ -157,7 +157,7 @@ int main(int argc, char** argv)
         exit(EXIT_FAILURE);
     }
 
-    // Set drawing color for both contexts
+    // Set drawing Color for both contexts
     glfwMakeContextCurrent(windows[0]);
     glColor3f(0.6f, 0.f, 0.6f);
     glfwMakeContextCurrent(windows[1]);

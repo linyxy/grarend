@@ -129,7 +129,7 @@ static void drawScene(void)
     glRotatef((GLfloat) rot_y * 0.5f, 0.0f, 1.0f, 0.0f);
     glRotatef((GLfloat) rot_z * 0.5f, 0.0f, 0.0f, 1.0f);
 
-    // Set model color (used for orthogonal views, lighting disabled)
+    // Set model Color (used for orthogonal views, lighting disabled)
     glColor4fv(model_diffuse);
 
     // Set model material (used for perspective view, lighting enabled)
@@ -172,7 +172,7 @@ static void drawGrid(float scale, int steps)
     // We don't want to update the Z-buffer
     glDepthMask(GL_FALSE);
 
-    // Set grid color
+    // Set grid Color
     glColor3f(0.0f, 0.5f, 0.5f);
 
     glBegin(GL_LINES);

@@ -46,7 +46,7 @@ static int compareVideoModes(const void* fp, const void* sp)
     const int farea = fm->width * fm->height;
     const int sarea = sm->width * sm->height;
 
-    // First sort on color bits per pixel
+    // First sort on Color bits per pixel
     if (fbpp != sbpp)
         return fbpp - sbpp;
 

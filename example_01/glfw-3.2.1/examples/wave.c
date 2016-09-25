@@ -147,7 +147,7 @@ void init_grid(void)
 
 void draw_scene(GLFWwindow* window)
 {
-    // Clear the color and depth buffers
+    // Clear the Color and depth buffers
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // We don't want to modify the projection matrix
@@ -181,11 +181,11 @@ void init_opengl(void)
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_COLOR_ARRAY);
     glVertexPointer(3, GL_FLOAT, sizeof(struct Vertex), vertex);
-    glColorPointer(3, GL_FLOAT, sizeof(struct Vertex), &vertex[0].r); // Pointer to the first color
+    glColorPointer(3, GL_FLOAT, sizeof(struct Vertex), &vertex[0].r); // Pointer to the first Color
 
     glPointSize(2.0);
 
-    // Background color is black
+    // Background Color is black
     glClearColor(0, 0, 0, 0);
 }
 

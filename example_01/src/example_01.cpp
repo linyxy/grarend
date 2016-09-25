@@ -9,6 +9,7 @@
 #include <time.h>
 #include <math.h>
 //include libs for the project
+#include "vec3.cpp"
 
 using namespace std;
 
@@ -131,7 +132,7 @@ void drawCircle(float centerX, float centerY, float radius, int id) {
 
                 setPixel(i, j, red, green, blue);
 
-                // This is amusing, but it assumes negative color values are treated reasonably.
+                // This is amusing, but it assumes negative Color values are treated reasonably.
                 // setPixel(i,j, x/radius, y/radius, z/radius );
                 
                 // Just for fun, an example of making the boundary pixels yellow.
@@ -179,7 +180,7 @@ void display( GLFWwindow* window )
 {
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f ); //clear background screen to black
     
-    glClear(GL_COLOR_BUFFER_BIT);                // clear the color buffer (sets everything to black)
+    glClear(GL_COLOR_BUFFER_BIT);                // clear the Color buffer (sets everything to black)
     
     glMatrixMode(GL_MODELVIEW);                  // indicate we are specifying camera transformations
     glLoadIdentity();                            // make sure transformation is "zero'd"

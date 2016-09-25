@@ -248,7 +248,7 @@ void glfwDefaultWindowHints(void)
     _glfw.hints.window.focused     = GLFW_TRUE;
     _glfw.hints.window.autoIconify = GLFW_TRUE;
 
-    // The default is 24 bits of color, 24 bits of depth and 8 bits of stencil,
+    // The default is 24 bits of Color, 24 bits of depth and 8 bits of stencil,
     // double buffered
     _glfw.hints.framebuffer.redBits      = 8;
     _glfw.hints.framebuffer.greenBits    = 8;

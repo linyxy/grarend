@@ -22,6 +22,9 @@ public:
     GLfloat spu;
     GLfloat spv;
 
+    Material(const Vec3 &ambient, const Vec3 &diffuse, const Vec3 &specular, int anisoFlag, GLfloat spu, GLfloat spv);
+
+    Material();
 };
 
 

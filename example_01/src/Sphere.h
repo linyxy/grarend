@@ -14,6 +14,8 @@ public:
     GLfloat r;
 
     Sphere(const Vec3 &postion, GLfloat r);
+
+    Sphere();
 };
 
 

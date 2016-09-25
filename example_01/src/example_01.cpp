@@ -11,6 +11,10 @@
 //include libs for the project
 #include "Vec3.cpp"
 #include "Color.h"
+#include "Material.h"
+#include "dirLight.h"
+#include "pntLight.h"
+#include "Sphere.h"
 
 using namespace std;
 
@@ -35,15 +39,11 @@ int Height_global = 400;
 Color ambient_color = Color();
 Color diffuse_color[5];
 Color specular_color[5];
-GLfloat power_u[5] = {0};
-GLfloat power_v[5] = {0};
-GLfloat power_i[5] = {0};
-GLfloat point_light_location[5][3] = {0};
-GLfloat point_light_color[5][3] = {0};
-GLfloat directional_light_location[5][3] = {0};
-GLfloat directional_light_color[5][3] = {0};
-GLfloat sphere[5][4] = {0};
-int ka_num = 0, kd_num = 0, pu_num = 0, pv_num = 0, pi_num = 0, pl_num = 0, dl_num = 0, sphere_num = 0;
+Material materials;
+dirLight dllights[5];
+pntLight pngtLights[5];
+Sphere sphere;
+int pl_num = 0, dl_num = 0, sphere_num = 1;
 
 
 inline float sqr(float x) { return x*x; }

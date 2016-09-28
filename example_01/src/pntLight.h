@@ -15,6 +15,8 @@ public:
 
     pntLight(Vec3 pos,Color co);
     pntLight();
+
+    bool islight();
 };
 
 

@@ -11,3 +11,7 @@ pntLight::pntLight(Vec3 pos, Color co) {
 pntLight::pntLight() : position(Vec3()),color(Color()) {
 
 }
+
+bool pntLight::islight() {
+    return color.R()==color.G()==color.B()==0 ? 0 : 1;
+}

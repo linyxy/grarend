@@ -14,3 +14,7 @@ dirLight::dirLight() {
     direction = Vec3();
     color = Color();
 }
+
+bool dirLight::islight() {
+    return color.R()==color.G()==color.B()==0 ? 0 : 1;
+}

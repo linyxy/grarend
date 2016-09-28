@@ -31,7 +31,7 @@ public:
     //重载
     //add
     Vec3 operator+(Vec3 va) const ;
-    Vec3& operator+=(Vec3 &va);
+    Vec3& operator+=(const Vec3 &va);
     //sub
     Vec3 operator-(Vec3 &va) const;
     Vec3 operator-=(Vec3 &va);

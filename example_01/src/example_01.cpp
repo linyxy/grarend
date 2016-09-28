@@ -101,7 +101,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 //****************************************************
 //diffuse component iterate through light sources
 //****************************************************
-Vec3 diffuse_comp(Vec3 nor){
+Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
     //nor & ray_dir already normalized
     Vec3 refle = material.diffuse;
     Vec3 result = Vec3();
@@ -109,13 +109,19 @@ Vec3 diffuse_comp(Vec3 nor){
     for(int i  = 0;i<MAX_LIGHT_NUM;i++){
         GLfloat d = dllights[i].direction * nor;
         Vec3 comp = d * dllights[i].color.co;
-        result = result + comp.indi_scale(refle);
+        result += comp.indi_scale(refle);
 
     }
     //iterate through point light
+    for(int i= 0; i<MAX_LIGHT_NUM;i++){
+        pntLight pl = pngtLights[i];
+        Vec3 dir = p_on_sphere - pl.position;
+        dir.normal();
+        GLfloat d = dir * nor;
+        Vec3 comp = d * pl.color.co;
+        result+=comp.indi_scale(refle);
+    }
 
-    //TODO 这里是否需要normalize?
-//    result.normal();
     return result;
 }
 
@@ -160,6 +166,7 @@ void drawCircle(float centerX, float centerY, float radius) {
                 //this is the point on surface
                 //this is also the vector of normal
                 Vec3 normal = Vec3(x,y,z);
+                Vec3 p_sphere = normal;
                 normal.normal();//normalize it's self
 
                 Vec3 step_color;
@@ -167,11 +174,10 @@ void drawCircle(float centerX, float centerY, float radius) {
                 step_color = material.ambient.indi_scale(ambient_color.co );
 
                 //diffuse component
-                step_color = step_color + diffuse_comp(normal);
+                step_color = step_color + diffuse_comp(normal,p_sphere);
                 //specular component
 
                 //color blender
-                step_color.normal();
                 setPixel(i, j, step_color.x, step_color.y, step_color.z);
 
                 // This is amusing, but it assumes negative Color values are treated reasonably.
@@ -242,6 +248,7 @@ Vec3 readingVector(char **argv, int st_pos){
     return Vec3(r,g,b);
 }
 
+
 void getInputCoefficients(int argc, char *argv[]) {
     int i = 0;
     //print out all arguments listed
@@ -291,11 +298,31 @@ void getInputCoefficients(int argc, char *argv[]) {
             i+=3;
             Vec3 color = readingVector(argv, i);
             dirLight dl = dirLight(pos,Color(color));
-            dllights[0] = dl;
+            //put this light into specifc position
+            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
+                if(dllights[count].islight())continue;
+                dllights[i] = dl;
+            }
             printf("direction light:\n pos");
             dl.direction.to_str();
             printf("\n color:");
             dl.color.to_str();
+        }
+        else if(!strcmp(argv[i],"-pl")){
+            i++;
+            Vec3 pos = readingVector(argv, i);
+            i+=3;
+            Vec3 color = readingVector(argv, i);
+            pntLight pl = pntLight(pos,Color(color));
+            //put this light into specifc position
+            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
+                if(pngtLights[count].islight())continue;
+                pngtLights[i] = pl;
+            }
+            printf("point light:\n pos");
+            pl.position.to_str();
+            printf("\n color:");
+            pl.color.to_str();
         }
 //        else if()
         i++;

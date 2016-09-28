@@ -16,6 +16,8 @@ class dirLight {
         dirLight(Vec3 pos,Color c);
         dirLight();
 
+        bool islight();
+
 };
 
 

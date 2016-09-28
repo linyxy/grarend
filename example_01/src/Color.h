@@ -24,6 +24,8 @@ class Color {
         GLfloat G() const;
         GLfloat B() const ;
 
+
+
         Vec3 comp() const;
 
         //重载

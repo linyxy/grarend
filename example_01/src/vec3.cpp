@@ -19,7 +19,7 @@ Vec3 Vec3::operator+(Vec3 va) const {
     return Vec3(x+va.x,y+va.y,z+va.z);
 }
 
-Vec3& Vec3::operator+=(Vec3 &va) {
+Vec3& Vec3::operator+=(const Vec3 &va) {
     *this = *this + va;
     return *this;
 }

@@ -23,14 +23,15 @@ GLfloat max(GLfloat a, GLfloat b){
 }
 
 Color::Color(GLfloat r, GLfloat g, GLfloat b, GLfloat alpha) {
-    //range r g b is 0 - 255
-    r = max(min(255,r),0);
-    g = max(min(255,g),0);
-    b = max(min(255,b),0);
+
     co = Vec3(r,g,b);
     this->alpha = alpha;
 }
 
+Color::Color(Vec3 clr, GLfloat alpha) {
+    co = clr;
+    this->alpha = alpha;
+}
 
 
 GLfloat Color::R() const{
@@ -56,3 +57,6 @@ Color Color::operator*(GLfloat &m)const {
 }
 
 
+void Color::to_str() const {
+    co.to_str();
+}

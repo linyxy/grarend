@@ -41,12 +41,17 @@ GLfloat Vec3::operator*(Vec3 &va) const {
     return x*va.x+y*va.y+z*va.z;
 }
 
+Vec3 Vec3::operator/(GLfloat m) const {
+    return Vec3(x/m, y/m, z/m);
+}
+
+
 Vec3& Vec3::operator*=(GLfloat m) {
     return *this = *this * m;
 }
 
 GLfloat Vec3::length() const {
-    return sqrt(x*x+y*y+z*z);
+    return (float)sqrt(x*x+y*y+z*z);
 }
 
 void Vec3::normal() {
@@ -66,6 +71,15 @@ GLfloat Vec3::dist(Vec3 &va) const {
 
 Vec3 Vec3::cross(Vec3 &va) const {
     return Vec3(this->y * va.z - this->z * va.y,
-                   this->z * va.x - this->x * va.z,
-                   this->x * va.y - this->y * va.x);
+                this->z * va.x - this->x * va.z,
+                this->x * va.y - this->y * va.x);
+}
+
+
+Vec3 operator*(GLfloat m, Vec3 &va) {
+    return Vec3(va.x*m, va.y*m, va.z*m);
+}
+
+void Vec3::to_str() const {
+    cout<<"<"<<this->x<<","<<this->y<<","<<this->z<<"> ";
 }

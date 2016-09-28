@@ -5,11 +5,12 @@
 #include "dirLight.h"
 
 dirLight::dirLight(Vec3 pos, Color c) {
-    position = pos;
+    pos.normal();
+    direction = pos;
     color = c;
 }
 
 dirLight::dirLight() {
-    position = Vec3();
+    direction = Vec3();
     color = Color();
 }

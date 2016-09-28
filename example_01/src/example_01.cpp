@@ -101,10 +101,22 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 //****************************************************
 //diffuse component iterate through light sources
 //****************************************************
-Vec3 diffuse_comp(Vec3 ray_dir,Vec3 nor){
+Vec3 diffuse_comp(Vec3 nor){
+    //nor & ray_dir already normalized
     Vec3 refle = material.diffuse;
+    Vec3 result = Vec3();
+    //iterate through dir light
+    for(int i  = 0;i<MAX_LIGHT_NUM;i++){
+        GLfloat d = dllights[i].direction * nor;
+        Vec3 comp = d * dllights[i].color.co;
+        result = result + comp.indi_scale(refle);
 
-    return refle;
+    }
+    //iterate through point light
+
+    //TODO 这里是否需要normalize?
+//    result.normal();
+    return result;
 }
 
 //****************************************************
@@ -129,7 +141,7 @@ void drawCircle(float centerX, float centerY, float radius) {
     //as this is orthognal projection
     //the ray is always points to (0,0,-1)
     Vec3 ray_dirction = Vec3(0,0,-1);
-
+    ray_dirction.normal();
     for (int i = 0; i < Width_global; i++) {
         for (int j = 0; j < Height_global; j++) {
 
@@ -155,10 +167,11 @@ void drawCircle(float centerX, float centerY, float radius) {
                 step_color = material.ambient.indi_scale(ambient_color.co );
 
                 //diffuse component
-                step_color = step_color + diffuse_comp(ray_dirction,normal);
+                step_color = step_color + diffuse_comp(normal);
                 //specular component
 
                 //color blender
+                step_color.normal();
                 setPixel(i, j, step_color.x, step_color.y, step_color.z);
 
                 // This is amusing, but it assumes negative Color values are treated reasonably.
@@ -170,26 +183,9 @@ void drawCircle(float centerX, float centerY, float radius) {
                 // }
             }
 
-            Vec3 NORMAL =  Vec3();
 
 
-            //directional light
-//            for (int dl_id = 0; dl_id < dl_num; dl_id++) {
 
-//                Vec3 L =  Vec3(directional_light_location[dl_id][0], directional_light_location[dl_id][1], directional_light_location[dl_id][2]);
-//                L.inverse();
-//                Vec3 V;//TODO
-//                Vec3 R = Vec3::sub(2* Vec3::dot(N, Vec3::dot(N, L)), L);
-//                GLfloat n;//TODO
-//
-//                //diffuse + specular
-//                red += Vec3::dot(L, NORMAL) * diffuse_color[id][0] * directional_light_color[id][0] * 255 + specular_color[id][0] * directional_light_color[id][0] * pow(Vec3::dot(R, V), n) * 255;
-//
-//                green += Vec3::dot(L, NORMAL) * diffuse_color[id][1] * directional_light_color[id][1] * 255 + specular_color[id][1] * directional_light_color[id][1] * pow(Vec3::dot(R, V), n) * 255;
-//
-//                blue += Vec3::dot(L, NORMAL) * diffuse_color[id][2] * directional_light_color[id][2] * 255 + specular_color[id][2] * directional_light_color[id][2] * pow(Vec3::dot(R, V), n) * 255;
-
-//            }
         }
     }
 
@@ -239,7 +235,7 @@ void size_callback(GLFWwindow* window, int width, int height)
 //****************************************************
 // function to get input coefficients
 //****************************************************
-Vec3 readingColor(char *argv[],int st_pos){
+Vec3 readingVector(char **argv, int st_pos){
     GLfloat r = (GLfloat)atof(argv[st_pos]);
     GLfloat g = (GLfloat)atof(argv[st_pos+1]);
     GLfloat b = (GLfloat)atof(argv[st_pos+2]);
@@ -257,21 +253,21 @@ void getInputCoefficients(int argc, char *argv[]) {
     cout<<"  arguments listed"<<endl;
 
     //non-exist ambient color part
-    ambient_color = Color(1.0,1.0,1.0);
+    ambient_color = Color(0.0,0.0,0.0);
     //white light source
 
     while (i < argc) {
         if (!strcmp(argv[i], "-ka")) {
             i++;
-            Vec3 ambient = readingColor(argv,i);
+            Vec3 ambient = readingVector(argv, i);
             material.ambient = ambient;
             printf("ambient component:%f %f %f\n",ambient.x,ambient.y,ambient.z);
         }
         else if(!strcmp(argv[i],"-kd")){
             i++;
-            Vec3 diffuse = readingColor(argv,i);
+            Vec3 diffuse = readingVector(argv, i);
             material.diffuse = diffuse;
-            printf("ambient component:%f %f %f\n",diffuse.x,diffuse.y,diffuse.z);
+            printf("diffuse component:%f %f %f\n",diffuse.x,diffuse.y,diffuse.z);
         }
         else if(!strcmp(argv[i],"-spu")){
             i++;
@@ -289,107 +285,25 @@ void getInputCoefficients(int argc, char *argv[]) {
             printf("sp compo:%f \n",material.spu);
         }
         //adding light source
+        else if(!strcmp(argv[i],"-dl")){
+            i++;
+            Vec3 pos = readingVector(argv, i);
+            i+=3;
+            Vec3 color = readingVector(argv, i);
+            dirLight dl = dirLight(pos,Color(color));
+            dllights[0] = dl;
+            printf("direction light:\n pos");
+            dl.direction.to_str();
+            printf("\n color:");
+            dl.color.to_str();
+        }
 //        else if()
         i++;
     }
 }
 
 
-//******************
-//test for vec3
-//******************
-void prfloatVec(Vec3 &vec)
-{
-    cout << "["
-         << vec.x << ","
-         << vec.y << ","
-         << vec.z << "]" << endl;
-}
 
-
-void vec3test(){
-    cout << "hello vector" << endl;
-
-    //测试构造函数
-    Vec3 v1(10,20,30);
-    prfloatVec(v1);
-
-    //测试默认拷贝构造函数
-    Vec3 v2(v1);
-    prfloatVec(v2);
-
-    //测试负向量
-    Vec3 v3 = -v1;
-    prfloatVec(v3);
-
-    //测试零向量
-    v2.zero();
-    prfloatVec(v2);
-
-    //测试计算向量长度
-    Vec3 v4(5,-4,7);
-    float r = v4.length();
-    cout << r << endl;
-
-    //测试向量乘以标量
-    Vec3 v5(-5,0,0.4f);
-    Vec3 v6 = v5 * (float)-3;
-    prfloatVec(v6);
-
-    //测试向量乘等于标量
-    v5 *= -3;
-    prfloatVec(v5);
-
-    //测试向量除以标量
-//    Vec3 v7(4.7f,-6,8);
-//    Vec3 v8 = v7 / 2;
-//    prfloatVec(v8);
-
-    //测试标量乘以向量
-    Vec3 v9(1,2,3);
-    Vec3 v10 = 2 * v9;
-    prfloatVec(v10);
-
-    //测试向量标准化
-    Vec3 v11(12,-5,0);
-    v11.normal();
-    prfloatVec(v11);
-
-    //测试向量相加
-    Vec3 a(1,2,3);
-    Vec3 b(4,5,6);
-    Vec3 r1 = a + b;
-    prfloatVec(r1);
-
-    //测试向量相减
-    Vec3 r2 = b - a;
-    prfloatVec(r2);
-
-    //测试向量间距离
-    Vec3 x(5,0,0);
-    Vec3 y(-1,8,0);
-    float d = x.dist(y);
-    cout << d << endl;
-
-    //向量相乘
-    Vec3 h1(3,-2,7);
-    Vec3 h2(0,4,-1);
-    float dp = h1 * h2;
-    cout << dp << endl;
-
-    //两向量间的角度
-    float arc = static_cast<float>(acos(dp/(h1.length()*h2.length())) * 180 / 3.14149);
-    cout << arc << endl;
-
-    //两向量叉乘
-    Vec3 t1(1,3,4);
-    Vec3 t2(2,-5,8);
-    Vec3 cp = t1.cross(t2);
-    prfloatVec(cp);
-
-    system("pause");
-//    return 0;
-}
 
 
 
@@ -401,7 +315,7 @@ void vec3test(){
 // the usual stuff, nothing exciting here
 //****************************************************
 int main(int argc, char *argv[]) {
-    vec3test();
+    //    vec3test();
     //This initializes glfw
     initializeRendering();
     getInputCoefficients(argc, argv);

@@ -10,7 +10,7 @@
 
 class dirLight {
     public:
-        Vec3 position;
+        Vec3 direction;
         Color color;
 
         dirLight(Vec3 pos,Color c);

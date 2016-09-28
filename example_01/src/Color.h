@@ -18,6 +18,7 @@ class Color {
     public:
         Color();
         Color(GLfloat r,GLfloat g, GLfloat b,GLfloat alpha = 1);
+        Color(Vec3 clr, GLfloat alpha = 1);
 
         GLfloat R() const ;
         GLfloat G() const;
@@ -27,6 +28,7 @@ class Color {
 
         //重载
         Color operator*(GLfloat &m) const ;
+        void to_str() const;
 };
 
 

@@ -7,14 +7,16 @@
 
 #include <GLFW/glfw3.h>
 #include <math.h>
+#include <iostream>
+using namespace std;
 
 class Vec3
 {
 
-    public:
+public:
     GLfloat x,y,z;
 
-    public:
+public:
     //constructor
     Vec3(GLfloat  x, GLfloat  y, GLfloat  z);
     Vec3();
@@ -36,6 +38,9 @@ class Vec3
     //scale
     Vec3 operator*(GLfloat m) const;
     Vec3& operator*=(GLfloat m);
+
+    Vec3 operator/(GLfloat m) const;
+
     //dist
     GLfloat  dist(Vec3 &va) const ;
     //dot prodcut
@@ -44,9 +49,10 @@ class Vec3
     Vec3 indi_scale(Vec3 &va) const;
     //cross product
     Vec3 cross(Vec3 &va) const;
+
+    void to_str() const;
 };
 
 Vec3 operator*(GLfloat m, Vec3 &va);
-
 
 #endif //ASSIGNMENT1_VEC3_H

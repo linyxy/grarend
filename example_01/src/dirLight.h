@@ -5,7 +5,7 @@
 #ifndef ASSIGNMENT1_DIRLIGHT_H
 #define ASSIGNMENT1_DIRLIGHT_H
 
-#include "Vec3.cpp"
+#include "Vec3.h"
 #include "Color.h"
 
 class dirLight {
@@ -14,6 +14,8 @@ class dirLight {
         Color color;
 
         dirLight(Vec3 pos,Color c);
+        dirLight();
+
 };
 
 

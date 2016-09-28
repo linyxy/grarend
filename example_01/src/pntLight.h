@@ -14,6 +14,7 @@ public:
     Color color;
 
     pntLight(Vec3 pos,Color co);
+    pntLight();
 };
 
 

@@ -6,27 +6,27 @@
 #define ASSIGNMENT1_COLOR_H
 
 #include <GLFW/glfw3.h>
-#include "Vec3.cpp"
+#include "Vec3.h"
 #include <cmath>
 
 
 
 class Color {
-    private:
+    public:
         Vec3 co;
         GLfloat alpha;
     public:
         Color();
-        Color(GLfloat r,GLfloat g, GLfloat b,GLfloat alpha);
-        Color(Color c);
+        Color(GLfloat r,GLfloat g, GLfloat b,GLfloat alpha = 1);
 
-        GLfloat R();
-        GLfloat G();
-        GLfloat B();
+        GLfloat R() const ;
+        GLfloat G() const;
+        GLfloat B() const ;
 
-        Color add();
+        Vec3 comp() const;
+
         //重载
-        Color operator*(const GLfloat m);
+        Color operator*(GLfloat &m) const ;
 };
 
 

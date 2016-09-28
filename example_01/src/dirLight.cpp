@@ -8,3 +8,8 @@ dirLight::dirLight(Vec3 pos, Color c) {
     position = pos;
     color = c;
 }
+
+dirLight::dirLight() {
+    position = Vec3();
+    color = Color();
+}

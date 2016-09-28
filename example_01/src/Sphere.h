@@ -5,7 +5,7 @@
 #ifndef ASSIGNMENT1_SPHERE_H
 #define ASSIGNMENT1_SPHERE_H
 
-#include "Vec3.cpp"
+#include "Vec3.h"
 
 class Sphere {
 public:

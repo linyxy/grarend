@@ -39,15 +39,25 @@
   <div class="peopledetails"> 
 
   <p>This using an ambient source with #000000 color</p>
-  <p>setting up directional light (1,1,1) point to (1,1,1)</p>
+  <p>setting up directional light (-1,-1,-1) point with light (1,1,1)</p>
   <p>diffuse component(0.28, 0.52, 0.90)</p>
   <p>-ka .1 .1 .1</p>
   <p>-kd 0.28 0.52 0.90</p>
   <p>-dl 1 1 1 1 1 1</p>
   <p><img src="./res/diffuse_DL0.png" height="250px"></p>
-    
+  <p>-kd 0.28 0.52 0.90  -ks 1 1 1 -dl 2.0 2.0 2.0 1.0 1.0 1.0 -sp 2</p>
   </div>
 
+  <h1>Specular of Direction Light isotropic material</h1>
+  <div class="peopledetails"> 
 
+  <p>setting up directional light (-1,-1,-1) point to (1,1,1)</p>
+  <p>-ks 1 1 1 </p>
+  <p>-dl -1 -1 -1 1 1 1</p>
+  <p>-sp 8  </p>
+  <p><img src="./res/specular0.png" height="250px"></p>
+
+  </div>
+  
       
 </body></html>

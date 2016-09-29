@@ -120,23 +120,27 @@ Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
     Vec3 refle = material.diffuse;
     Vec3 result = Vec3();
     //iterate through dir light
-    for(int i  = 0;i<MAX_LIGHT_NUM;i++){
+    for(int i = 0; i<MAX_LIGHT_NUM; i++){
         GLfloat d = (-dllights[i].direction) * nor;
         Vec3 comp = d * dllights[i].color.co;
         result += comp.indi_scale(refle);
 
     }
     //iterate through point light
-    for(int i= 0; i<MAX_LIGHT_NUM;i++){
+    for(int i = 0; i<MAX_LIGHT_NUM; i++){
 //        pntLight pl = pngtLights[i];
 //        Vec3 dir = p_on_sphere - pl.position;
 //        dir.normal();
 //        GLfloat d = dir * nor;
 //        Vec3 comp = d * pl.color.co;
 //        result+=comp.indi_scale(refle);
+
+
+        Vec3 lightDir = - p_on_sphere + pngtLights[i].position;
+        lightDir.normal();
+
+        result += (pngtLights[i].color.co * max(0.0f, lightDir * nor)).indi_scale(refle);
         
-
-
     }
 
     return result;

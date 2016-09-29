@@ -121,7 +121,7 @@ Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
     Vec3 result = Vec3();
     //iterate through dir light
     for(int i  = 0;i<MAX_LIGHT_NUM;i++){
-        GLfloat d = dllights[i].direction * nor;
+        GLfloat d = (-dllights[i].direction) * nor;
         Vec3 comp = d * dllights[i].color.co;
         result += comp.indi_scale(refle);
 
@@ -161,10 +161,10 @@ Vec3 specular_comp(Vec3 nor,Vec3 p_on_sphere){
         GLfloat  k = eye*r;
 //        r.to_str();
 //        cout<<"K:"<<k<<endl;
-
+        k = max(k,0);
         k = power(k,material.spu);
 
-        k = max(k,0);
+
 
         Vec3 comp = dllights[i].color.co * k;
         result+=comp.indi_scale(refle);
@@ -226,7 +226,6 @@ void drawCircle(float centerX, float centerY, float radius) {
 //                step_color = step_color + diffuse_comp(normal,p_sphere);
                 //specular component
                 step_color += specular_comp(normal,p_sphere);
-//                step_color.to_str();
                 //color blender
                 setPixel(i, j, step_color.x, step_color.y, step_color.z);
 
@@ -355,15 +354,8 @@ void getInputCoefficients(int argc, char *argv[]) {
             Vec3 color = readingVector(argv, i);
             dirLight dl = dirLight(pos,Color(color));
             //put this light into specifc position
-            dllights[1] = dl;
-//            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
-//                if(!dllights[count].islight())
-//                {
-//                    dllights[i] = dl;
-//                    break;
-//
-//                }
-//            }
+            dllights[dl_num] = dl;
+            dl_num++;
 
         }
         else if(!strcmp(argv[i],"-pl")){
@@ -375,46 +367,16 @@ void getInputCoefficients(int argc, char *argv[]) {
             printf("reading pos");
             pl.position.to_str();
             //put this light into specifc position
-//            pngtLights[0] = pl;
+            pngtLights[pl_num] = pl;
+            pl_num++;
 //            pngtLights[0].position.to_str();
 
-//            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
-//                if(pngtLights[count].islight())continue;
-//                pngtLights[i] = pl;
-//                break;
-//            }
 
         }
-//        else if()
         i++;
     }
 
-    //print out every situation
-//    for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
-//        if(dllights[count].islight())
-//        {
-//
-//            printf("direction light:\n pos");
-//            dllights[i].direction.to_str();
-//            printf("\n color:");
-//            dllights[i].color.to_str();
-//            printf("\n");
-//
-//        }
-//    }
-//
-    for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
-        if(pngtLights[count].islight())
-        {
 
-            printf("point light:\n pos");
-            pngtLights[i].position.to_str();
-            printf("\n color:");
-            pngtLights[i].color.to_str();
-            printf("\n");
-
-        }
-    }
 }
 
 

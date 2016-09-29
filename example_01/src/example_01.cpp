@@ -119,28 +119,24 @@ Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
     //nor & ray_dir already normalized
     Vec3 refle = material.diffuse;
     Vec3 result = Vec3();
-    //iterate through dir light
-    for(int i = 0; i<MAX_LIGHT_NUM; i++){
+
+    //iterate through directional light
+    for(int i = 0; i < MAX_LIGHT_NUM; i++){
+
         GLfloat d = (-dllights[i].direction) * nor;
         Vec3 comp = d * dllights[i].color.co;
+
         result += comp.indi_scale(refle);
 
     }
-    //iterate through point light
-    for(int i = 0; i<MAX_LIGHT_NUM; i++){
-//        pntLight pl = pngtLights[i];
-//        Vec3 dir = p_on_sphere - pl.position;
-//        dir.normal();
-//        GLfloat d = dir * nor;
-//        Vec3 comp = d * pl.color.co;
-//        result+=comp.indi_scale(refle);
 
+    //iterate through point light
+    for(int i = 0; i < MAX_LIGHT_NUM; i++){
 
         Vec3 lightDir = - p_on_sphere + pngtLights[i].position;
         lightDir.normal();
 
         result += (pngtLights[i].color.co * max(0.0f, lightDir * nor)).indi_scale(refle);
-        
     }
 
     return result;
@@ -161,29 +157,27 @@ Vec3 specular_comp(Vec3 nor, Vec3 p_on_sphere){
     //already normalized
 
 
-    //iterate through dir light
-    for(int i  = 0; i<MAX_LIGHT_NUM; i++){
+    //iterate through directional light
+    for(int i = 0; i < MAX_LIGHT_NUM; i++){
         //find r first
         Vec3 l = dllights[i].direction;
         Vec3 r = (-l) + nor * (2*(nor*l));
         r.normal();
 
-
         GLfloat k = eye * r;
-//        r.to_str();
-//        cout<<"K:"<<k<<endl;
         k = max(k, 0);
         k = power(k, material.spu);
-
         Vec3 comp = dllights[i].color.co * k;
-        result+=comp.indi_scale(refle);
+
+        result += comp.indi_scale(refle);
     }
 
+    //iterate through point light
     for (int i = 0; i < MAX_LIGHT_NUM; i++) {
         Vec3 lightDir = - p_on_sphere + pngtLights[i].position;
-
         Vec3 reflect = (-lightDir) + nor * (2*(nor*lightDir));
         reflect.normal();
+
         result += (pngtLights[i].color.co * pow(max(0.0f, reflect * eye), material.spu)).indi_scale(refle);
 
     }

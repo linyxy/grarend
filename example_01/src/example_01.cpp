@@ -161,10 +161,10 @@ Vec3 specular_comp(Vec3 nor,Vec3 p_on_sphere){
         GLfloat  k = eye*r;
 //        r.to_str();
 //        cout<<"K:"<<k<<endl;
-
+        k = max(k,0);
         k = power(k,material.spu);
 
-        k = max(k,0);
+
 
         Vec3 comp = dllights[i].color.co * k;
         result+=comp.indi_scale(refle);

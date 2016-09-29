@@ -13,6 +13,6 @@ Material::Material() {
     specular= Vec3();
     diffuse = Vec3();
     anisoFlag = 0;
-    spu = spv = 0;
+    spu = spv = 1;
 }
 

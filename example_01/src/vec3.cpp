@@ -55,7 +55,11 @@ GLfloat Vec3::length() const {
 }
 
 void Vec3::normal() {
-    GLfloat t = 1 / length();
+    GLfloat  l = length();
+    GLfloat t ;
+    if(l==0)t = 0;
+    else  t = 1 / length();
+
     x = x * t;
     y = y * t;
     z = z * t;

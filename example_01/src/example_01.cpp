@@ -98,6 +98,20 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     
 }
 
+static GLfloat max(GLfloat a , GLfloat b){
+    if(a>b)return a;
+    else return b;
+}
+
+GLfloat power(GLfloat a,int p){
+    GLfloat r = 1;
+    while(p){
+        r *= a;
+        p--;
+    }
+    return r;
+}
+
 //****************************************************
 //diffuse component iterate through light sources
 //****************************************************
@@ -123,6 +137,41 @@ Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
     }
 
     return result;
+}
+
+//****************************************************
+//specular component iterate through light sources
+//
+// isotropic material
+//****************************************************
+Vec3 specular_comp(Vec3 nor,Vec3 p_on_sphere){
+    //nar & ray_dir already normalized
+    Vec3 refle = material.specular;
+    Vec3 result = Vec3();
+    //iterate through dir light
+    for(int i  = 0;i<MAX_LIGHT_NUM;i++){
+        //find r first
+        Vec3 l = dllights[i].direction;
+        Vec3 r = (-l) + nor * (2*(nor*l));
+        r.normal();
+        //vector for eye vector
+        //deault as 0,0,-1
+        //already normalized
+        Vec3 eye = Vec3(0,0,-1);
+        GLfloat  k = eye*r;
+//        r.to_str();
+//        cout<<"K:"<<k<<endl;
+
+        k = power(k,material.spu);
+
+        k = max(k,0);
+
+        Vec3 comp = dllights[i].color.co * k;
+        result+=comp.indi_scale(refle);
+    }
+//    result.to_str();
+    return result;
+
 }
 
 //****************************************************
@@ -166,17 +215,18 @@ void drawCircle(float centerX, float centerY, float radius) {
                 //this is the point on surface
                 //this is also the vector of normal
                 Vec3 normal = Vec3(x,y,z);
-                Vec3 p_sphere = normal;
+                Vec3 p_sphere = Vec3(x,y,z);
                 normal.normal();//normalize it's self
 
                 Vec3 step_color;
                 //ambient component
-                step_color = material.ambient.indi_scale(ambient_color.co );
+//                step_color = material.ambient.indi_scale(ambient_color.co );
 
                 //diffuse component
-                step_color = step_color + diffuse_comp(normal,p_sphere);
+//                step_color = step_color + diffuse_comp(normal,p_sphere);
                 //specular component
-
+                step_color += specular_comp(normal,p_sphere);
+//                step_color.to_str();
                 //color blender
                 setPixel(i, j, step_color.x, step_color.y, step_color.z);
 
@@ -276,6 +326,12 @@ void getInputCoefficients(int argc, char *argv[]) {
             material.diffuse = diffuse;
             printf("diffuse component:%f %f %f\n",diffuse.x,diffuse.y,diffuse.z);
         }
+        else if(!strcmp(argv[i],"-ks")){
+            i++;
+            Vec3 diffuse = readingVector(argv, i);
+            material.specular = diffuse;
+            printf("specular component:%f %f %f\n",diffuse.x,diffuse.y,diffuse.z);
+        }
         else if(!strcmp(argv[i],"-spu")){
             i++;
             material.spu = (GLfloat)atof(argv[i]);
@@ -299,14 +355,16 @@ void getInputCoefficients(int argc, char *argv[]) {
             Vec3 color = readingVector(argv, i);
             dirLight dl = dirLight(pos,Color(color));
             //put this light into specifc position
-            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
-                if(dllights[count].islight())continue;
-                dllights[i] = dl;
-            }
-            printf("direction light:\n pos");
-            dl.direction.to_str();
-            printf("\n color:");
-            dl.color.to_str();
+            dllights[1] = dl;
+//            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
+//                if(!dllights[count].islight())
+//                {
+//                    dllights[i] = dl;
+//                    break;
+//
+//                }
+//            }
+
         }
         else if(!strcmp(argv[i],"-pl")){
             i++;
@@ -314,18 +372,48 @@ void getInputCoefficients(int argc, char *argv[]) {
             i+=3;
             Vec3 color = readingVector(argv, i);
             pntLight pl = pntLight(pos,Color(color));
-            //put this light into specifc position
-            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
-                if(pngtLights[count].islight())continue;
-                pngtLights[i] = pl;
-            }
-            printf("point light:\n pos");
+            printf("reading pos");
             pl.position.to_str();
-            printf("\n color:");
-            pl.color.to_str();
+            //put this light into specifc position
+//            pngtLights[0] = pl;
+//            pngtLights[0].position.to_str();
+
+//            for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
+//                if(pngtLights[count].islight())continue;
+//                pngtLights[i] = pl;
+//                break;
+//            }
+
         }
 //        else if()
         i++;
+    }
+
+    //print out every situation
+//    for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
+//        if(dllights[count].islight())
+//        {
+//
+//            printf("direction light:\n pos");
+//            dllights[i].direction.to_str();
+//            printf("\n color:");
+//            dllights[i].color.to_str();
+//            printf("\n");
+//
+//        }
+//    }
+//
+    for(int count = 0 ;count<MAX_LIGHT_NUM;count++){
+        if(pngtLights[count].islight())
+        {
+
+            printf("point light:\n pos");
+            pngtLights[i].position.to_str();
+            printf("\n color:");
+            pngtLights[i].color.to_str();
+            printf("\n");
+
+        }
     }
 }
 

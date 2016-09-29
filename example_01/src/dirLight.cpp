@@ -16,5 +16,7 @@ dirLight::dirLight() {
 }
 
 bool dirLight::islight() {
-    return color.R()==color.G()==color.B()==0 ? 0 : 1;
+    bool k =  color.R()==color.G()==color.B()==0 ? false : true;
+//    printf("%d 233\n",k);
+    return k;
 }

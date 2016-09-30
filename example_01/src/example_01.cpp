@@ -133,10 +133,12 @@ Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
     //iterate through point light
     for(int i = 0; i < MAX_LIGHT_NUM; i++){
 
-        Vec3 lightDir = - p_on_sphere + pngtLights[i].position;
+        Vec3 lightDir =  p_on_sphere - pngtLights[i].position;
+//        lightDir.to_str();
+//        p_on_sphere.to_str();
+//        printf("\n");
         lightDir.normal();
-
-        result += (pngtLights[i].color.co * max(0.0f, lightDir * nor)).indi_scale(refle);
+        result += (pngtLights[i].color.co * max(0.0f, (-lightDir) * nor)).indi_scale(refle);
     }
 
     return result;
@@ -174,7 +176,7 @@ Vec3 specular_comp(Vec3 nor, Vec3 p_on_sphere){
 
     //iterate through point light
     for (int i = 0; i < MAX_LIGHT_NUM; i++) {
-        Vec3 lightDir = - p_on_sphere + pngtLights[i].position;
+        Vec3 lightDir =  p_on_sphere - pngtLights[i].position;
         Vec3 reflect = (-lightDir) + nor * (2*(nor*lightDir));
         reflect.normal();
 
@@ -190,7 +192,7 @@ Vec3 specular_comp(Vec3 nor, Vec3 p_on_sphere){
 //****************************************************
 //specular component iterate through light sources
 //
-// isotropic material
+// anisotropic material
 //****************************************************
 Vec3 aniso_spcular(Vec3 nor,Vec3 p_on_sphere){
     Vec3 refle = material.specular;
@@ -250,15 +252,15 @@ void drawCircle(float centerX, float centerY, float radius) {
                 //this is the point on surface
                 //this is also the vector of normal
                 Vec3 normal = Vec3(x,y,z);
-                Vec3 p_sphere = Vec3(x,y,z);
                 normal.normal();//normalize it's self
+                Vec3 p_sphere = normal;
 
                 Vec3 step_color;
                 //ambient component
-//                step_color = material.ambient.indi_scale(ambient_color.co );
+                step_color = material.ambient.indi_scale(ambient_color.co );
 
                 //diffuse component
-//                step_color = step_color + diffuse_comp(normal,p_sphere);
+                step_color = step_color + diffuse_comp(normal,p_sphere);
                 //specular component
                 step_color += specular_comp(normal, p_sphere);
                 //color blender
@@ -344,7 +346,7 @@ void getInputCoefficients(int argc, char *argv[]) {
     cout<<"  arguments listed"<<endl;
 
     //non-exist ambient color part
-    ambient_color = Color(0.0,0.0,0.0);
+    ambient_color = Color(1.0,1.0,1.0);
     //white light source
 
     while (i < argc) {

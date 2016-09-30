@@ -41,7 +41,7 @@ int Height_global = 400;
 
 Color ambient_color = Color();
 Material material;
-dirLight *dllights = new dirLight[MAX_LIGHT_NUM ];
+dirLight *dllights = new dirLight[MAX_LIGHT_NUM];
 pntLight *pngtLights = new pntLight[MAX_LIGHT_NUM];
 Sphere sphere;
 int pl_num = 0, dl_num = 0, sphere_num = 1;
@@ -119,21 +119,24 @@ Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
     //nor & ray_dir already normalized
     Vec3 refle = material.diffuse;
     Vec3 result = Vec3();
-    //iterate through dir light
-    for(int i  = 0;i<MAX_LIGHT_NUM;i++){
+
+    //iterate through directional light
+    for(int i = 0; i < MAX_LIGHT_NUM; i++){
+
         GLfloat d = (-dllights[i].direction) * nor;
         Vec3 comp = d * dllights[i].color.co;
+
         result += comp.indi_scale(refle);
 
     }
+
     //iterate through point light
-    for(int i= 0; i<MAX_LIGHT_NUM;i++){
-        pntLight pl = pngtLights[i];
-        Vec3 dir = p_on_sphere - pl.position;
-        dir.normal();
-        GLfloat d = dir * nor;
-        Vec3 comp = d * pl.color.co;
-        result+=comp.indi_scale(refle);
+    for(int i = 0; i < MAX_LIGHT_NUM; i++){
+
+        Vec3 lightDir = - p_on_sphere + pngtLights[i].position;
+        lightDir.normal();
+
+        result += (pngtLights[i].color.co * max(0.0f, lightDir * nor)).indi_scale(refle);
     }
 
     return result;
@@ -144,31 +147,41 @@ Vec3 diffuse_comp(Vec3 nor,Vec3 p_on_sphere){
 //
 // isotropic material
 //****************************************************
-Vec3 specular_comp(Vec3 nor,Vec3 p_on_sphere){
+Vec3 specular_comp(Vec3 nor, Vec3 p_on_sphere){
     //nar & ray_dir already normalized
     Vec3 refle = material.specular;
     Vec3 result = Vec3();
-    //iterate through dir light
-    for(int i  = 0;i<MAX_LIGHT_NUM;i++){
+    Vec3 eye = Vec3(0, 0, -1);
+    //vector for eye vector
+    //deault as 0,0,-1
+    //already normalized
+
+
+    //iterate through directional light
+    for(int i = 0; i < MAX_LIGHT_NUM; i++){
         //find r first
         Vec3 l = dllights[i].direction;
         Vec3 r = (-l) + nor * (2*(nor*l));
         r.normal();
-        //vector for eye vector
-        //deault as 0,0,-1
-        //already normalized
-        Vec3 eye = Vec3(0,0,-1);
-        GLfloat  k = eye*r;
-//        r.to_str();
-//        cout<<"K:"<<k<<endl;
-        k = max(k,0);
-        k = power(k,material.spu);
 
-
-
+        GLfloat k = eye * r;
+        k = max(k, 0);
+        k = power(k, material.spu);
         Vec3 comp = dllights[i].color.co * k;
-        result+=comp.indi_scale(refle);
+
+        result += comp.indi_scale(refle);
     }
+
+    //iterate through point light
+    for (int i = 0; i < MAX_LIGHT_NUM; i++) {
+        Vec3 lightDir = - p_on_sphere + pngtLights[i].position;
+        Vec3 reflect = (-lightDir) + nor * (2*(nor*lightDir));
+        reflect.normal();
+
+        result += (pngtLights[i].color.co * pow(max(0.0f, reflect * eye), material.spu)).indi_scale(refle);
+
+    }
+
 //    result.to_str();
     return result;
 
@@ -247,7 +260,7 @@ void drawCircle(float centerX, float centerY, float radius) {
                 //diffuse component
 //                step_color = step_color + diffuse_comp(normal,p_sphere);
                 //specular component
-                step_color += specular_comp(normal,p_sphere);
+                step_color += specular_comp(normal, p_sphere);
                 //color blender
                 setPixel(i, j, step_color.x, step_color.y, step_color.z);
 

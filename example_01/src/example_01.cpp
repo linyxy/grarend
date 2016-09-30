@@ -175,6 +175,28 @@ Vec3 specular_comp(Vec3 nor,Vec3 p_on_sphere){
 }
 
 //****************************************************
+//specular component iterate through light sources
+//
+// isotropic material
+//****************************************************
+Vec3 aniso_spcular(Vec3 nor,Vec3 p_on_sphere){
+    Vec3 refle = material.specular;
+    Vec3 result = Vec3();
+    //iterate through dir light
+    for(int i  = 0;i<MAX_LIGHT_NUM;i++){
+        //find r first
+        Vec3 l = dllights[i].direction;
+        Vec3 r = (-l) + nor * (2*(nor*l));
+        r.normal();
+        //vector for eye vector
+        //deault as 0,0,-1
+        //already normalized
+        Vec3 eye = Vec3(0,0,-1);
+
+    }
+}
+
+//****************************************************
 // Draw a filled circle.
 //****************************************************
 void drawCircle(float centerX, float centerY, float radius) {
